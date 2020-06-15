@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+echo "************************************"
+echo "**the code is mv the dictorty file**"
+echo "************************************"
+
+FILEPATH=/csaf/jkpre/pre/data
+
+cd $FILEPATH
+
+#ls -lrt  $FILEPATH | awk '{print $9}' | grep -v "^$" > /csaf/jkpre/20200612_file.txt
+
+for instno in `cat /csaf/jkpre/20200612_file.txt`
+do
+
+    echo "instcd is $instno"
+    ls -lrt $FILEPATH/$instno/download | awk '{print $9}' | grep -v "^$" > /csaf/jkpre/donguse/$instno.txt
+    for cont in `cat /csaf/jkpre/donguse/$instno.txt`
+    do
+        if [ -f $FILEPATH/$instno/download/$cont ]; then
+            echo "file:$cont"
+            if [ ! -d /csaf/jkpre/data/$instno/download/ ]; then
+                mkdir -p /csaf/jkpre/data/$instno/download/
+            fi
+            
+            cp $FILEPATH/$instno/download/$cont /csaf/jkpre/data/$instno/download/
+        fi
+    done
+done
+echo "move file finish!"
